@@ -5,7 +5,7 @@ import view.Menu;
 
 public class UserMainMenu implements Menu {
     @Override
-    public static void show() {
+    public void show() {
         System.out.println("AHhaaa!!");
     }
 
