@@ -16,7 +16,7 @@ import java.util.List;
 public class AdminOrderMenu implements Menu {
     private static final String RETURN = "0. Return to main menu";
     private static final String TRY_AGAIN = "Incorrect input. Please, try again";
-    private static final String [] SAVE_UPDATE_DELETE_MENU = {"1. Save", "2. Update", "3. Delete", RETURN};
+    private static final String[] SAVE_UPDATE_DELETE_MENU = {"1. Save", "2. Update", "3. Delete", RETURN};
     private OrderService orderServise = OrderServiceImpl.getInstance();
     private UserService userService = UserServiceImpl.getInstance();
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +24,7 @@ public class AdminOrderMenu implements Menu {
     private User user;
     LoginMenu loginMenu = new LoginMenu(); //change to adminMenu when create
     private final String[] mainAdminOrderMenu = {"1. Find order by ID",
-            "2. Find order by User", "3. Find all", " 0. Exit"};
+            "2. Find order by User", "3. Find all orders", " 0. Exit"};
 
     @Override
     public void show() {
@@ -35,15 +35,17 @@ public class AdminOrderMenu implements Menu {
                 choice = Integer.parseInt(reader.readLine());
             } catch (NumberFormatException | IOException e) {
                 System.out.println(TRY_AGAIN);
+                show();
             }
             switch (choice) {
                 case 1:
-                    findOrderById();
-                    break;
-                case 2:
                     findOrderByUserMenu();
                     break;
+                case 2:
+                    findOrderById();
+                    break;
                 case 3:
+                    findAll();
                     break;
                 case 0:
                     exit();
@@ -54,7 +56,7 @@ public class AdminOrderMenu implements Menu {
 
     @Override
     public void exit() {
-        loginMenu.show(); //change to adminMenu.show() when create;
+      //  loginMenu.show(); //change to adminMenu.show() when create;
     }
 
     private void findOrderByUserMenu() {
@@ -65,6 +67,7 @@ public class AdminOrderMenu implements Menu {
             userName = reader.readLine();
         } catch (NumberFormatException | NullPointerException | IOException e) {
             System.out.println(TRY_AGAIN);
+            findOrderByUserMenu();
         }
         if (userName.equals("0")) {
             show();
@@ -90,30 +93,39 @@ public class AdminOrderMenu implements Menu {
             } else {
                 orderServise.findById(userIntId);
                 showItems(SAVE_UPDATE_DELETE_MENU);
+                saveUpdateDelete();
             }
         } catch (NumberFormatException | IOException e) {
             System.out.println(TRY_AGAIN);
+            findOrderById();
         }
-        saveUpdateDelete();
+
     }
 
     private void findAll() {
-
+        orderList = orderServise.findAll();
+        showItems(SAVE_UPDATE_DELETE_MENU);
+        saveUpdateDelete();
     }
 
-    private void showAndDelete(List<Order> list) {
+    private void showAndDeleteByAll(List<Order> list) {
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i + 1 + ": " + list.get(i));
         }
+        System.out.println(RETURN);
         System.out.println("What must be remove? Write the number");
         try {
             int remuveNumber = Integer.parseInt(reader.readLine());
-            orderServise.delete(list.get(remuveNumber - 1));
+            if (remuveNumber == 0){
+                show();
+            } else {
+                orderServise.delete(list.get(remuveNumber - 1));
+                findAll();
+            }
         } catch (IOException | NumberFormatException e) {
             System.out.println("Invalid input");
+            findAll();
         }
-
-
     }
 
     private void createNewOrder() {
@@ -124,13 +136,16 @@ public class AdminOrderMenu implements Menu {
         //create some logic
     }
 
+
     private void saveUpdateDelete() {
+        System.out.println("Please, make your choice");
         while (true) {
             int choice = 0;
             try {
                 choice = Integer.parseInt(reader.readLine());
             } catch (NumberFormatException | IOException e) {
                 System.out.println(TRY_AGAIN);
+                saveUpdateDelete();
             }
 
             switch (choice) {
@@ -141,7 +156,7 @@ public class AdminOrderMenu implements Menu {
                     updateSomething();
                     break;
                 case 3:
-                    showAndDelete(orderList);
+                    showAndDeleteByAll(orderList);
                     break;
                 case 0:
                     show();
