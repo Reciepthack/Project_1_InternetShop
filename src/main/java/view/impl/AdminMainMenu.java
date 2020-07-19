@@ -1,5 +1,6 @@
 package view.impl;
 
+import service.OrderService;
 import view.Menu;
 
 import java.io.BufferedReader;
@@ -9,7 +10,7 @@ import java.io.InputStreamReader;
 public class AdminMainMenu implements Menu {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static final String TRY_AGAIN = "Incorrect input. Please, try again";
-    private final String [] adminMainMenu = {"1. Admin products menu", "2. Admin user Menu",
+    private final String [] adminMainMenuList = {"1. Admin products menu", "2. Admin user menu",
                                                 "3. Admin order menu", "0. Exit"};
     private AdminOrderMenu adminOrderMenu = new AdminOrderMenu();
     private LoginMenu loginMenu = new LoginMenu();
@@ -18,11 +19,11 @@ public class AdminMainMenu implements Menu {
     @Override
     public void show() {
         int choice = 0;
-        showItems(adminMainMenu);
+        showItems(adminMainMenuList);
         while (true) {
             try {
                 choice = Integer.parseInt(reader.readLine());
-            } catch (NumberFormatException | IOException e) {
+            } catch (NumberFormatException | IOException | NullPointerException e) {
                 System.out.println(TRY_AGAIN);
                 show();
             }
@@ -46,5 +47,9 @@ public class AdminMainMenu implements Menu {
     @Override
     public void exit() {
         loginMenu.show();
+    }
+
+    public static void main(String[] args) {
+        new AdminMainMenu().show();
     }
 }

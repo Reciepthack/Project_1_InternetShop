@@ -22,9 +22,8 @@ public class AdminOrderMenu implements Menu {
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private List<Order> orderList = null;
     private User user;
-    LoginMenu loginMenu = new LoginMenu(); //change to adminMenu when create
     private final String[] mainAdminOrderMenu = {"1. Find order by ID",
-            "2. Find order by User", "3. Find all orders", " 0. Exit"};
+            "2. Find order by User", "3. Find all orders", " 0. Return to admin main menu"};
 
     @Override
     public void show() {
@@ -33,7 +32,7 @@ public class AdminOrderMenu implements Menu {
         while (true) {
             try {
                 choice = Integer.parseInt(reader.readLine());
-            } catch (NumberFormatException | IOException e) {
+            } catch (NumberFormatException | IOException | NullPointerException e) {
                 System.out.println(TRY_AGAIN);
                 show();
             }
@@ -56,7 +55,7 @@ public class AdminOrderMenu implements Menu {
 
     @Override
     public void exit() {
-      //  loginMenu.show(); //change to adminMenu.show() when create;
+        new AdminMainMenu().show(); //need to fix
     }
 
     private void findOrderByUserMenu() {
@@ -116,7 +115,7 @@ public class AdminOrderMenu implements Menu {
         System.out.println("What must be remove? Write the number");
         try {
             int remuveNumber = Integer.parseInt(reader.readLine());
-            if (remuveNumber == 0){
+            if (remuveNumber == 0) {
                 show();
             } else {
                 orderServise.delete(list.get(remuveNumber - 1));
@@ -163,9 +162,5 @@ public class AdminOrderMenu implements Menu {
                     break;
             }
         }
-    }
-
-    public static void main(String[] args) {
-        new AdminOrderMenu().show();
     }
 }
