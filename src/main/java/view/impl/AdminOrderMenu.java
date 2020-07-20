@@ -75,7 +75,7 @@ public class AdminOrderMenu implements Menu {
             orderList = orderServise.findOrdersByUser(user);
             showItems(SAVE_UPDATE_DELETE_MENU);
         }
-        saveUpdateDelete();
+        saveUpdateDeleteSubMenu();
     }
 
     private void findOrderById() {
@@ -92,7 +92,7 @@ public class AdminOrderMenu implements Menu {
             } else {
                 orderServise.findById(userIntId);
                 showItems(SAVE_UPDATE_DELETE_MENU);
-                saveUpdateDelete();
+                saveUpdateDeleteSubMenu();
             }
         } catch (NumberFormatException | IOException e) {
             System.out.println(TRY_AGAIN);
@@ -104,7 +104,7 @@ public class AdminOrderMenu implements Menu {
     private void findAll() {
         orderList = orderServise.findAll();
         showItems(SAVE_UPDATE_DELETE_MENU);
-        saveUpdateDelete();
+        saveUpdateDeleteSubMenu();
     }
 
     private void showAndDeleteByAll(List<Order> list) {
@@ -136,7 +136,7 @@ public class AdminOrderMenu implements Menu {
     }
 
 
-    private void saveUpdateDelete() {
+    private void saveUpdateDeleteSubMenu() {
         System.out.println("Please, make your choice");
         while (true) {
             int choice = 0;
@@ -144,7 +144,7 @@ public class AdminOrderMenu implements Menu {
                 choice = Integer.parseInt(reader.readLine());
             } catch (NumberFormatException | IOException e) {
                 System.out.println(TRY_AGAIN);
-                saveUpdateDelete();
+                saveUpdateDeleteSubMenu();
             }
 
             switch (choice) {

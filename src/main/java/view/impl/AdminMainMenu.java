@@ -1,6 +1,5 @@
 package view.impl;
 
-import service.OrderService;
 import view.Menu;
 
 import java.io.BufferedReader;
@@ -23,7 +22,7 @@ public class AdminMainMenu implements Menu {
         while (true) {
             try {
                 choice = Integer.parseInt(reader.readLine());
-            } catch (NumberFormatException | IOException | NullPointerException e) {
+            } catch (NumberFormatException | IOException e) {
                 System.out.println(TRY_AGAIN);
                 show();
             }
