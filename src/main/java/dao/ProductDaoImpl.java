@@ -54,8 +54,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void save(Product product) {
-        idCount++;
-        product.setId(idCount);
+//        idCount++;
+//        product.setId(idCount);
         productMap.put(product.getId(), product);
     }
 
