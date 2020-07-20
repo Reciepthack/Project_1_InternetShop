@@ -17,6 +17,8 @@ public class OrderDaoIml implements OrderDao {
     private static final UserDao userDao = UserDaoIml.getInstance();
     private static final Map<Long, Order> orderMap = new TreeMap<>();
 
+    private int idCount = orderMap.size();
+
     static {
         orderMap.put(1L, new Order(1, userDao.findById(2), OrderStatus.DONE, Map.of(
                 productDao.findById(1), 10,
@@ -48,6 +50,8 @@ public class OrderDaoIml implements OrderDao {
 
     @Override
     public void save(Order order) {
+        idCount++;
+        order.setId(idCount);
         orderMap.put(order.getId(), order);
     }
 
