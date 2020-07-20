@@ -13,7 +13,7 @@ public class ProductDaoImpl implements ProductDao {
     private static final ProductDao productDao = new ProductDaoImpl();
     private static final Map<Long, Product> productMap = new TreeMap<>();
 
-    private int idCount = productMap.size();
+    private int idCount = 27;
 
     static {
         productMap.put(1L, new Product(1, "apple", 5, 500));
@@ -54,8 +54,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void save(Product product) {
-        idCount++;
-        product.setId(idCount);
+//        idCount++;
+//        product.setId(idCount);
         productMap.put(product.getId(), product);
     }
 
