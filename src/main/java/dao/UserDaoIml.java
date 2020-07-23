@@ -13,6 +13,8 @@ public class UserDaoIml implements UserDao{
     private static final UserDao userDao = new UserDaoIml();
     private static final Map<Long, User> userMap = new TreeMap<>();
 
+    public static int idCount = 3;
+
     static {
         userMap.put(1L,new User(1,"admin","admin", UserRole.ADMIN, true));
         userMap.put(2L,new User(2,"user","user", UserRole.CUSTOMER, true));
@@ -28,6 +30,8 @@ public class UserDaoIml implements UserDao{
 
     @Override
     public void save(User user) {
+        idCount++;
+        user.setId(idCount);
         userMap.put(user.getId(),user);
     }
 
