@@ -1,9 +1,11 @@
 package view.impl;
 
-
+import model.User;
+import model.UserRole;
 import service.UserService;
 import view.Menu;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class LoginMenu implements Menu {
@@ -29,7 +31,7 @@ public class LoginMenu implements Menu {
               case 1 :
                   loginSubMenu(scanner); break;
               case 2 :
-                  loginSubMenu(scanner); break;
+                  registerSubMenu(scanner); break;
               case 0 : exit(); break;
           }
         }
@@ -49,8 +51,13 @@ public class LoginMenu implements Menu {
         String password =  scanner.nextLine();
 
         if(userService.login(login, password)) {
-
-        }
+            User users = userService.findByName(login);
+                if (UserRole.ADMIN.equals(users.getRole())) {
+                    AdminMainMenu.show();
+                } else if (users.getRole().equals(UserRole.CUSTOMER){
+                    UserMainMenu.show();
+                }
+    }
         else {
             System.out.println("Wrong username/pasword");
             show();
@@ -59,6 +66,17 @@ public class LoginMenu implements Menu {
 
     private void registerSubMenu(Scanner scanner)
     {
-        show(); //todo add impl
+        System.out.println("Create a username:");
+        String username = scanner.nextLine();
+
+
+        System.out.println("Create a password:");
+        String password = scanner.nextLine();
+
+        System.out.println("Check your new Login and Password");
+        System.out.println("Login "+username);
+        System.out.println("Password "+password);
+
+        userService.register(username, password);
     }
 }
