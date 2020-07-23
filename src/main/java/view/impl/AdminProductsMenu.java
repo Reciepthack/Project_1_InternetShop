@@ -1,29 +1,34 @@
 package view.impl;
 
-import dao.ProductDaoImpl;
 import model.Product;
 import service.ProductService;
 import service.ProductServiceImpl;
 import view.Menu;
 
-import javax.print.DocFlavor;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class AdminProductsMenu implements Menu {
+    public static void main(String[] args) {
+        new AdminProductsMenu().show();
+    }
+
     private static final String Return = "0 Return to main menu";
     private static final String Incorrect = "Please try again";
     private static final String[] Changes = {"Delete", "Update", "Save", Return};
     private Scanner scanner = new Scanner(System.in);
     private ProductService productService = ProductServiceImpl.getInstance();
+    private List<Product> productList;
     LoginMenu loginMenu = new LoginMenu();
+    private int currentProductId;
 
-    private final String[] mainAdminProductMenu = {"1. Show all Products",
-            "2. Add Product", "0. Exit"};
+    private final String[] mainAdminProductMenu = {"1. Find Product by Number",
+            "2. Find Product by Name", "3. Show all Products", "0. Exit"};
 
     @Override
     public void show() {
+
         int choice = 0;
         showItems(mainAdminProductMenu);
         while (true) {
@@ -31,12 +36,17 @@ public class AdminProductsMenu implements Menu {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println(Incorrect);
+                show();
             }
             switch (choice) {
                 case 1:
-                    showAllProducts(ProductDaoImpl);
+                    findProductByNumber();
                     break;
                 case 2:
+                    findProductByName();
+                    break;
+                case 3:
+                    showAllProducts();
                     break;
                 case 0:
                     exit();
@@ -47,31 +57,61 @@ public class AdminProductsMenu implements Menu {
 
     @Override
     public void exit() {
-        loginMenu.show();
+        new AdminMainMenu().show();
     }
 
     private void addNewProduct() {
+        long id = 0;
+        String name;
+        float price;
+        int amount;
+        productList = productService.findAll();
+        try {
+            System.out.println("Please, Enter Name of new product");
+            name = scanner.nextLine();
+            System.out.println("Please, Enter price");
+            price = scanner.nextFloat();
+            System.out.println("Please, Enter amount");
+            amount = scanner.nextInt();
+            Product product = new Product(id, name, price, amount);
+            productService.save(product);
+            showAllProducts();
+        } catch (NumberFormatException | NullPointerException exception) {
+            System.out.println(Incorrect);
+        }
     }
 
     private void updateProduct() {
+
     }
 
-    private void saveProduct(){
-    }
+    private void deleteProduct() {
+        productList = productService.findAll();
+        System.out.println("Enter product NUMBER, what you want delete");
+        try {
+            currentProductId = Integer.parseInt(scanner.nextLine());
+            if (currentProductId == 0) {
+                show();
+            } else {
+                productService.delete(productList.get(currentProductId - 1));
+                System.out.println("This product deleted");
 
-    private void deleteProduct(){
-    }
-
-    private void showAllProducts(Map<Long,Product> productMap){
-        for (Map.Entry entry: productMap.entrySet()) {
-            System.out.println("ID: " + entry.getKey() + "Product: " + entry.getValue());
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(Incorrect);
         }
-        System.out.println(Changes);
-        subMenuDeleteUpdateSave();
-
     }
 
-    private void subMenuDeleteUpdateSave(){
+    private void showAllProducts() {
+        productList = productService.findAll();
+        for (int i = 0; i < productList.size(); i++) {
+            System.out.println("Number: " + (i + 1) + " Product: " + productList.get(i));
+        }
+        showItems(Changes);
+        subMenuDeleteUpdateSave();
+    }
+
+    private void subMenuDeleteUpdateSave() {
         int choice = 0;
         while (true) {
             try {
@@ -87,16 +127,34 @@ public class AdminProductsMenu implements Menu {
                     updateProduct();
                     break;
                 case 3:
-                    saveProduct();
+                    addNewProduct();
                     break;
                 case 0:
-                    exit();
+                    show();
                     break;
             }
         }
     }
 
-    private void findProductById() {
+    private void findProductByName() {
+        String[] subMenuByName = {"Enter Name of Product", Return};
+        showItems(subMenuByName);
+        String productStringName = scanner.nextLine();
+        try {
+            if (productStringName.equals("0")) {
+                showItems(mainAdminProductMenu);
+            } else {
+                System.out.println(productService.findByName(productStringName));
+                showItems(Changes);
+                subMenuDeleteUpdateSave();
+            }
+
+        } catch (NullPointerException | NumberFormatException exception) {
+            System.out.println(Incorrect);
+        }
+    }
+
+    private void findProductByNumber() {
         String[] subMenuById = {"Enter ID of Product", Return};
         showItems(subMenuById);
         String productId = scanner.nextLine();
@@ -105,7 +163,9 @@ public class AdminProductsMenu implements Menu {
             if (productId.equals("0")) {
                 showItems(mainAdminProductMenu);
             } else {
-                productService.findById(productIntId);
+                System.out.println(productService.findById(productIntId));
+                showItems(Changes);
+                subMenuDeleteUpdateSave();
             }
         } catch (NullPointerException e) {
             System.out.println(Incorrect);
