@@ -1,6 +1,5 @@
 package service;
 
-import model.Order;
 import model.User;
 
 import java.util.List;
@@ -24,4 +23,6 @@ public interface UserService {
     User findById(long id);
 
     List<User> findAll();
+
+    User getActiveUser();
 }
