@@ -224,16 +224,20 @@ public class AdminOrderMenu implements Menu {
     }
 
     private void deleteOrder(List<Order> list) {
+        showAllList(list);
+        System.out.println(RETURN);
+        int choise = 0;
         try {
-            for (int i = 0; i < list.size(); i++) {
-                orderServise.delete(list.get(i));
+            System.out.println("Select order");
+            choise = Integer.parseInt(reader.readLine());
+            if (choise == 0) {
+                deleteSubMenu();
             }
-            System.out.println("Success");
-            deleteSubMenu();
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+        } catch (NumberFormatException | NullPointerException | IOException e) {
             System.out.println(TRY_AGAIN);
             deleteSubMenu();
         }
+        deleteOrder(list.get(choise - 1));
     }
 
     private void positionCalculate(Order order) {
