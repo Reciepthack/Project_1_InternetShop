@@ -4,7 +4,6 @@ import model.User;
 import service.UserService;
 import service.UserServiceImpl;
 import view.Menu;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +27,7 @@ public class AdminUserMenu implements Menu {
         while (true) {
             try {
                 num = Integer.parseInt(input);
-                System.out.println("Hello my little admin))");
+
             } catch (NumberFormatException e) {
                 System.out.println("Error, please enter by ID number user");
                 show();
