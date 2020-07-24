@@ -237,7 +237,32 @@ public class AdminOrderMenu implements Menu {
     }
 
     private void positionCalculate(Order order) {
+        Map<Product, Integer> map = order.getPositionMap();
+        double result = 0;
+        double finalResult = 0;
+        for (Map.Entry<Product, Integer> entry : map.entrySet()){
+            result = orderServise.positionCalculate(entry.getKey(), entry.getValue());
+            System.out.println(entry.getKey() + ", position calculate: " + result);
+            finalResult += result;
+        }
+        System.out.println("General calculate for order ID: " +order.getId() + " is: "  + finalResult);
+    }
 
+    private void positionCalculate(List<Order> list) {
+        showAllList(list);
+        System.out.println(RETURN);
+        int choise = 0;
+        try {
+            System.out.println("Select order");
+            choise = Integer.parseInt(reader.readLine());
+            if (choise == 0) {
+                positionCalculateSubMenu();
+            }
+        } catch (NumberFormatException | NullPointerException | IOException e) {
+            System.out.println(TRY_AGAIN);
+            positionCalculateSubMenu();
+        }
+        positionCalculate(list.get(choise - 1));
     }
 
     public void showAllList(List<Order> list) {
@@ -376,13 +401,16 @@ public class AdminOrderMenu implements Menu {
         }
         switch (choice) {
             case 1:
-
+                positionCalculate(getOrderById());
+                positionCalculateSubMenu();
                 break;
             case 2:
-
+                positionCalculate(getOrderByUsername());
+                positionCalculateSubMenu();
                 break;
             case 3:
-
+                positionCalculate(getOrderFromAll());
+                positionCalculateSubMenu();
                 break;
             case 0:
                 show();
@@ -410,4 +438,5 @@ public class AdminOrderMenu implements Menu {
         System.out.println("Success");
         updateSubMenu();
     }
+
 }
