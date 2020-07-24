@@ -7,13 +7,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class AdminMainMenu implements Menu {
+    private static final AdminMainMenu adminMainMenu = new AdminMainMenu();
+    private static final AdminOrderMenu adminOrderMenu = AdminOrderMenu.getInstance();
+  //  private static final AdminProductsMenu adminProductsMenu = AdminProductsMenu.getInstance();
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static final String TRY_AGAIN = "Incorrect input. Please, try again";
     private final String [] adminMainMenuList = {"1. Admin products menu", "2. Admin user menu",
                                                 "3. Admin order menu", "0. Exit"};
-    private AdminOrderMenu adminOrderMenu = new AdminOrderMenu();
     private LoginMenu loginMenu = new LoginMenu();
 
+    public static AdminMainMenu getInstance() {
+        return adminMainMenu;
+    }
 
     @Override
     public void show() {
@@ -28,7 +33,7 @@ public class AdminMainMenu implements Menu {
             }
             switch (choice) {
                 case 1:
-                    //link to products menu
+                  //  adminProductsMenu.show();
                     break;
                 case 2:
                     //link to users menu

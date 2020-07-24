@@ -50,8 +50,8 @@ public class OrderDaoIml implements OrderDao {
 
     @Override
     public void save(Order order) {
-//        idCount++;
-//        order.setId(idCount);
+        idCount++;
+        order.setId(idCount);
         orderMap.put(order.getId(), order);
     }
 
