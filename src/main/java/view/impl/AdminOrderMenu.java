@@ -442,5 +442,4 @@ public class AdminOrderMenu implements Menu {
         System.out.println("Success");
         updateSubMenu();
     }
-
 }

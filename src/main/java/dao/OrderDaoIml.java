@@ -20,24 +20,24 @@ public class OrderDaoIml implements OrderDao {
     private int idCount = 5;
 
     static {
-        orderMap.put(1L,new Order(1,userDao.findById(2), OrderStatus.DONE, Map.of(
-            productDao.findById(1), 10,
-            productDao.findById(13), 8,
-            productDao.findById(21), 15
+        orderMap.put(1L, new Order(1, userDao.findById(2), OrderStatus.DONE, Map.of(
+                productDao.findById(1), 10,
+                productDao.findById(13), 8,
+                productDao.findById(21), 15
         )));
-        orderMap.put(2L,new Order(2,userDao.findById(3), OrderStatus.SENT, Map.of(
-            productDao.findById(18), 11,
-            productDao.findById(17), 9
+        orderMap.put(2L, new Order(2, userDao.findById(3), OrderStatus.SENT, Map.of(
+                productDao.findById(18), 11,
+                productDao.findById(17), 9
         )));
-        orderMap.put(3L,new Order(3,userDao.findById(2), OrderStatus.PRE_CHECKOUT, Map.of(
-            productDao.findById(16),5
+        orderMap.put(3L, new Order(3, userDao.findById(2), OrderStatus.PRE_CHECKOUT, Map.of(
+                productDao.findById(16), 5
         )));
-        orderMap.put(4L,new Order(4,userDao.findById(3), OrderStatus.CHECKED_OUT, Map.of(
-            productDao.findById(14),5,
-            productDao.findById(21),8
+        orderMap.put(4L, new Order(4, userDao.findById(3), OrderStatus.CHECKED_OUT, Map.of(
+                productDao.findById(14), 5,
+                productDao.findById(21), 8
         )));
-        orderMap.put(5L,new Order(5,userDao.findById(3), OrderStatus.REJECTED, Map.of(
-                productDao.findById(15),5
+        orderMap.put(5L, new Order(5, userDao.findById(3), OrderStatus.REJECTED, Map.of(
+                productDao.findById(15), 5
         )));
     }
 
