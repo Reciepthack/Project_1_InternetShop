@@ -4,13 +4,15 @@ import model.User;
 import service.UserService;
 import service.UserServiceImpl;
 import view.Menu;
-import java.util.List;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AdminUserMenu implements Menu {
 
     private String[] items = {"1.Unblock/Block user"};
     private Scanner scanner = new Scanner(System.in);
+    private AdminMainMenu adminMainMenu = AdminMainMenu.getInstance();
 
     private UserService userService = UserServiceImpl.getInstance();
 
@@ -18,15 +20,15 @@ public class AdminUserMenu implements Menu {
     @Override
     public void show() {
         showItems(items);
+        System.out.println("-----------------------");
         System.out.println("0. Exit");
-
+        System.out.println("-----------------------");
         String input;
         int num = 0;
         input = scanner.next();
         while (true) {
             try {
                 num = Integer.parseInt(input);
-
             } catch (NumberFormatException e) {
                 System.out.println("Error, please enter");
                 show();
@@ -42,46 +44,40 @@ public class AdminUserMenu implements Menu {
         }
     }
 
+
     @Override
     public void exit() {
-
+        adminMainMenu.show();
     }
 
     public void SubBlockUnblockUser() {
-        List<User> allUsers = userService.findAll();
-        System.out.println("List users");
-        for (User u : allUsers) {
-            System.out.println(u.getId() + " " + u.getUsername() + " " + u.isActive());
-        }
-        System.out.println("Enter ID user block/unblock");
-        int a = scanner.nextInt();
-        User user = userService.findById(a);
-
-        if (user == null) {
-            System.out.println("Press re-enter ID:");
-        }
-        if (user != null && user.isActive() == true) {
-            user.setActive(false);
-            userService.update(user);
-            System.out.println("Block active user");
-        } else if (user != null && user.isActive() == false) ;
-        user.setActive(true);
-        System.out.println("Unblock inactive user");
-        userService.update(user);
-        switch (a){
-            case 1:
-                user.getId();
-                break;
-            case 2:
-                user.setActive(true);
-                break;
-            case 3:
-                user.setActive(false);
-                break;
-            case 0:
+        userService.findAll()
+                .forEach(user -> System.out.println(user.getId() + " "
+                        + user.getUsername() + " "
+                        + (user.isActive() ? "active" : "blocked")));
+        System.out.println("\nEnter the id of the user you want to block/unblock or press 0 to step back");
+        try {
+            int choice = scanner.nextInt();
+            if (choice == 0) {
                 show();
-                break;
+            }
+            User user = userService.findById(choice);
+
+            if (user == null) {
+                System.out.println("User with this ID not found, please try again");
+                SubBlockUnblockUser();
+            }
+
+            if (user.isActive()) {
+                userService.blockUser(choice);
+                System.out.println("User named " + user.getUsername() + "blocked");
+            } else {
+                userService.unBlockUser(choice);
+                System.out.println("User named " + user.getUsername() + "unblocked");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Incorrect input, please try again");
+            SubBlockUnblockUser();
         }
     }
 }
-
