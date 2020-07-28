@@ -86,4 +86,10 @@ public class UserServiceImpl implements UserService{
     public User getActiveUser() {
         return activeUser;
     }
+
+    @Override
+    public void setActiveUser(User user) {
+        this.activeUser = user;
+    }
+
 }
