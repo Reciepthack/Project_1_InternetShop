@@ -25,4 +25,6 @@ public interface UserService {
     List<User> findAll();
 
     User getActiveUser();
+
+    void setActiveUser(User user);
 }
