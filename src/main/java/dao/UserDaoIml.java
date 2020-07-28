@@ -13,7 +13,7 @@ public class UserDaoIml implements UserDao{
     private static final UserDao userDao = new UserDaoIml();
     private static final Map<Long, User> userMap = new TreeMap<>();
 
-    private int idCount = userMap.size();
+    public static int idCount = 3;
 
     static {
         userMap.put(1L,new User(1,"admin","admin", UserRole.ADMIN, true));
