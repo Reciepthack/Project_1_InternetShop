@@ -22,14 +22,13 @@ public class AdminUserMenu implements Menu {
 
         String input;
         int num = 0;
-        System.out.println("Enter ID user");
         input = scanner.next();
         while (true) {
             try {
                 num = Integer.parseInt(input);
 
             } catch (NumberFormatException e) {
-                System.out.println("Error, please enter by ID number user");
+                System.out.println("Error, please enter");
                 show();
             }
             switch (num) {
