@@ -3,6 +3,7 @@ package view.impl;
 import model.User;
 import model.UserRole;
 import service.UserService;
+import service.UserServiceImpl;
 import view.Menu;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Scanner;
 
 public class LoginMenu implements Menu {
 
-    private UserService userService;
+    private UserService userService = UserServiceImpl.getInstance();
     private String[] items = {"1.Login", "2.Register"};
     private Scanner scanner;
 
@@ -51,15 +52,16 @@ public class LoginMenu implements Menu {
         String password =  scanner.nextLine();
 
         if(userService.login(login, password)) {
-            User users = userService.findByName(login);
-                if (UserRole.ADMIN.equals(users.getRole())) {
-                    AdminMainMenu.show();
-                } else if (users.getRole().equals(UserRole.CUSTOMER){
-                    UserMainMenu.show();
+            User user = userService.findByName(login);
+                if (UserRole.ADMIN.equals(user.getRole())) {
+                    AdminMainMenu.getInstance().show();
+                } else if (user.getRole().equals(UserRole.CUSTOMER){
+                    UserMainMenu.getInstance().show();
                 }
+            userService.setActiveUser(user);
     }
         else {
-            System.out.println("Wrong username/pasword");
+            System.out.println("Wrong username/password");
             show();
         }
     }
