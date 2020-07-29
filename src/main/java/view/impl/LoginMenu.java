@@ -45,18 +45,19 @@ public class LoginMenu implements Menu {
 
     private void loginSubMenu(Scanner scanner)
     {
-        System.out.println("input login:");
-        String login =  scanner.nextLine();
+        System.out.println("input login: ");
+        String login =  scanner.next();
 
-        System.out.println("input password:");
-        String password =  scanner.nextLine();
+        System.out.println("input password: ");
+        String password =  scanner.next();
 
         if(userService.login(login, password)) {
             User user = userService.findByName(login);
                 if (UserRole.ADMIN.equals(user.getRole())) {
                     AdminMainMenu.getInstance().show();
-                } else if (user.getRole().equals(UserRole.CUSTOMER){
-                    UserMainMenu.getInstance().show();
+                } else if (user.getRole().equals(UserRole.CUSTOMER)){
+                UserMainMenu userMainMenu = new UserMainMenu();
+                userMainMenu.show();
                 }
             userService.setActiveUser(user);
     }
@@ -68,12 +69,12 @@ public class LoginMenu implements Menu {
 
     private void registerSubMenu(Scanner scanner)
     {
-        System.out.println("Create a username:");
-        String username = scanner.nextLine();
+        System.out.println("Create a username: ");
+        String username = scanner.next();
 
 
-        System.out.println("Create a password:");
-        String password = scanner.nextLine();
+        System.out.println("Create a password: ");
+        String password = scanner.next();
 
         System.out.println("Check your new Login and Password");
         System.out.println("Login "+username);
