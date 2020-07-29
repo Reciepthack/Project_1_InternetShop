@@ -3,6 +3,7 @@ package service;
 import dao.UserDao;
 import dao.UserDaoIml;
 import model.User;
+import model.UserRole;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class UserServiceImpl implements UserService{
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
+            user.setRole(UserRole.CUSTOMER);
+            user.setActive(true);
             userDao.save(user);
             return true;
         }
