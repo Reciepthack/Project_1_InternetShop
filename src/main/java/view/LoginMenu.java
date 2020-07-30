@@ -1,19 +1,29 @@
-package view.impl;
+package view;
 
 import model.User;
 import model.UserRole;
 import service.UserService;
 import service.UserServiceImpl;
 import view.Menu;
+import view.admin.AdminMainMenu;
+import view.user.UserMainMenu;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class LoginMenu implements Menu {
 
+    private static LoginMenu loginMenu = new LoginMenu();
+
     private UserService userService = UserServiceImpl.getInstance();
     private String[] items = {"1.Login", "2.Register"};
     private Scanner scanner;
+
+    private LoginMenu(){
+    }
+
+    public static LoginMenu getInstance(){
+        return loginMenu;
+    }
 
     @Override
     public void show() {
@@ -56,8 +66,7 @@ public class LoginMenu implements Menu {
                 if (UserRole.ADMIN.equals(user.getRole())) {
                     AdminMainMenu.getInstance().show();
                 } else if (user.getRole().equals(UserRole.CUSTOMER)){
-                UserMainMenu userMainMenu = new UserMainMenu();
-                userMainMenu.show();
+                UserMainMenu.getInstance().show();
                 }
             userService.setActiveUser(user);
     }

@@ -1,4 +1,4 @@
-package view.impl;
+package view.admin;
 
 import model.Order;
 import model.OrderStatus;
@@ -17,20 +17,21 @@ public class AdminOrderMenu implements Menu {
     private static final AdminOrderMenu adminOrderMenu = new AdminOrderMenu();
     private static final AdminMainMenu adminMainMenu = AdminMainMenu.getInstance();
     private static final String RETURN = "0. Return to main menu";
+    private static final String RETURN_TO_PREVIOUS = "0. Return to the previous menu";
     private static final String TRY_AGAIN = "Incorrect input. Please, try again";
-    private static final String[] ADMIN_MAIN_MENU = {"1. Add new order", "2. Change order", "3. Delete order",
-            "4. Position calculate", "5. Show all orders", RETURN};
-    private static final String[] ORDER_CHANGE_MENU = {"1. Order Id", "2. User name", "3. Order status", "4. Product and amount", RETURN};
+    private static final String[] ADMIN_MAIN_MENU = {"1. Manage order status", "2. Add new order", "3. Change order", "4. Delete order",
+            "5. Position calculate", "6. Show all orders", RETURN};
+    private static final String[] ORDER_CHANGE_MENU = {"1. User name", "2. Order status", "3. Product and amount", RETURN_TO_PREVIOUS};
+    private static final String[] ORDER_STATUS_MENU = {"1. Show all new orders", RETURN_TO_PREVIOUS};
+    private final String[] ORDER_SUB_MENU = {"1. Show order by ID",
+            "2. Show order by User", "3. Show all orders", RETURN_TO_PREVIOUS};
     private OrderService orderServise = OrderServiceImpl.getInstance();
     private UserService userService = UserServiceImpl.getInstance();
     private ProductService productService = ProductServiceImpl.getInstance();
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private List<Order> orderList = null;
     private User user;
-    private final String[] ORDER_SUB_MENU = {"1. Show order by ID",
-            "2. Show order by User", "3. Show all orders", RETURN};
     private int currentCount;
-
     public static AdminOrderMenu getInstance() {
         return adminOrderMenu;
     }
@@ -47,18 +48,21 @@ public class AdminOrderMenu implements Menu {
         }
         switch (choice) {
             case 1:
-                addSubMenu();
+                manageOrderStatusSubMenu();
                 break;
             case 2:
-                updateSubMenu();
+                addNewSubMenu();
                 break;
             case 3:
-                deleteSubMenu();
+                updateSubMenu();
                 break;
             case 4:
-                positionCalculateSubMenu();
+                deleteSubMenu();
                 break;
             case 5:
+                positionCalculateSubMenu();
+                break;
+            case 6:
                 showAllSubMenu();
                 break;
             case 0:
@@ -93,7 +97,7 @@ public class AdminOrderMenu implements Menu {
     }
 
     private Order getOrderById() {
-        String[] subMenuByID = {"Please, enter ID number", RETURN};
+        String[] subMenuByID = {"Please, enter ID number", RETURN_TO_PREVIOUS};
         showItems(subMenuByID);
         Order order = null;
         int userId;
@@ -114,7 +118,7 @@ public class AdminOrderMenu implements Menu {
     private Order getOrderFromAll() {
         orderList = orderServise.findAll();
         showAllList(orderList);
-        System.out.println(RETURN);
+        System.out.println(RETURN_TO_PREVIOUS);
         System.out.println("Write order number to make changes");
         try {
             currentCount = Integer.parseInt(reader.readLine());
@@ -135,17 +139,12 @@ public class AdminOrderMenu implements Menu {
             choice = Integer.parseInt(reader.readLine());
             switch (choice) {
                 case 1:
-                    System.out.println("Enter the new ID");
-                    order.setId(Integer.parseInt(reader.readLine()));
-                    printSuccessAndReturn();
-                    break;
-                case 2:
                     System.out.println("Enter the new user");
                     String name = reader.readLine();
                     order.setUser(userService.findByName(name));
                     printSuccessAndReturn();
                     break;
-                case 3:
+                case 2:
                     System.out.println("Select a new order status");
                     showAllOrderStatus();
                     System.out.println(RETURN);
@@ -177,7 +176,7 @@ public class AdminOrderMenu implements Menu {
                     }
                     printSuccessAndReturn();
                     break;
-                case 4:
+                case 3:
                     Map<Product, Integer> map = order.getPositionMap();
                     System.out.println("Please, enter new product Id");
                     int id = Integer.parseInt(reader.readLine());
@@ -190,7 +189,7 @@ public class AdminOrderMenu implements Menu {
                     updateSubMenu();
                     break;
             }
-        } catch (IOException | NullPointerException | NumberFormatException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println(TRY_AGAIN);
             updateOrder(order);
         }
@@ -198,7 +197,7 @@ public class AdminOrderMenu implements Menu {
 
     private void updateOrder(List<Order> list) {
         showAllList(list);
-        System.out.println(RETURN);
+        System.out.println(RETURN_TO_PREVIOUS);
         int choise = 0;
         try {
             System.out.println("Select order");
@@ -225,7 +224,7 @@ public class AdminOrderMenu implements Menu {
 
     private void deleteOrder(List<Order> list) {
         showAllList(list);
-        System.out.println(RETURN);
+        System.out.println(RETURN_TO_PREVIOUS);
         int choise = 0;
         try {
             System.out.println("Select order");
@@ -244,12 +243,12 @@ public class AdminOrderMenu implements Menu {
         Map<Product, Integer> map = order.getPositionMap();
         double result = 0;
         double finalResult = 0;
-        for (Map.Entry<Product, Integer> entry : map.entrySet()){
+        for (Map.Entry<Product, Integer> entry : map.entrySet()) {
             result = orderServise.positionCalculate(entry.getKey(), entry.getValue());
             System.out.println(entry.getKey() + ", position calculate: " + result);
             finalResult += result;
         }
-        System.out.println("General calculate for order ID: " +order.getId() + " is: "  + finalResult);
+        System.out.println("General calculate for order ID: " + order.getId() + " is: " + finalResult);
     }
 
     private void positionCalculate(List<Order> list) {
@@ -269,20 +268,20 @@ public class AdminOrderMenu implements Menu {
         positionCalculate(list.get(choise - 1));
     }
 
-    public void showAllList(List<Order> list) {
+    private void showAllList(List<Order> list) {
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i + 1 + ": " + list.get(i));
         }
     }
 
-    public void showAllOrderStatus() {
+    private void showAllOrderStatus() {
         OrderStatus[] status = OrderStatus.values();
         for (int i = 0; i < status.length; i++) {
             System.out.println(i + 1 + ": " + status[i]);
         }
     }
 
-    private void addSubMenu() {
+    private void addNewSubMenu() {
         long id = 0;
         User user;
         OrderStatus orderStatus = null;
@@ -290,7 +289,7 @@ public class AdminOrderMenu implements Menu {
         int productsValue = 0;
         try {
             System.out.println("Please, Enter user name");
-            System.out.println(RETURN);
+            System.out.println(RETURN_TO_PREVIOUS);
             String s = reader.readLine();
             if (s.equals("0")) {
                 show();
@@ -298,7 +297,7 @@ public class AdminOrderMenu implements Menu {
             user = userService.findByName(s);
             System.out.println("Please, select the current order status");
             showAllOrderStatus();
-            System.out.println(RETURN);
+            System.out.println(RETURN_TO_PREVIOUS);
             int i = Integer.parseInt(reader.readLine());
             switch (i) {
                 case 1:
@@ -321,13 +320,13 @@ public class AdminOrderMenu implements Menu {
                     break;
             }
             System.out.println("Please, Enter product id");
-            System.out.println(RETURN);
+            System.out.println(RETURN_TO_PREVIOUS);
             productID = Integer.parseInt(reader.readLine());
             if (productID == 0) {
                 show();
             }
             System.out.println("Please, enter the products value");
-            System.out.println(RETURN);
+            System.out.println(RETURN_TO_PREVIOUS);
             productsValue = Integer.parseInt(reader.readLine());
             if (productsValue == 0) {
                 show();
@@ -339,7 +338,26 @@ public class AdminOrderMenu implements Menu {
 
         } catch (NumberFormatException | NullPointerException | IOException e) {
             System.out.println(TRY_AGAIN);
-            addSubMenu();
+            addNewSubMenu();
+        }
+    }
+
+    private void manageOrderStatusSubMenu() {
+        showItems(ORDER_STATUS_MENU);
+        int choice = 0;
+        try {
+            choice = Integer.parseInt(reader.readLine());
+            switch (choice) {
+                case 1:
+                    changeOrderStatus();
+                    break;
+                case 0:
+                    show();
+                    break;
+            }
+        } catch (IOException e) {
+            System.out.println(TRY_AGAIN);
+            manageOrderStatusSubMenu();
         }
     }
 
@@ -350,7 +368,7 @@ public class AdminOrderMenu implements Menu {
             choice = Integer.parseInt(reader.readLine());
         } catch (NumberFormatException | IOException e) {
             System.out.println(TRY_AGAIN);
-            addSubMenu();
+            addNewSubMenu();
         }
 
         switch (choice) {
@@ -376,7 +394,7 @@ public class AdminOrderMenu implements Menu {
             choice = Integer.parseInt(reader.readLine());
         } catch (NumberFormatException | IOException e) {
             System.out.println(TRY_AGAIN);
-            addSubMenu();
+            addNewSubMenu();
         }
         switch (choice) {
             case 1:
@@ -401,7 +419,7 @@ public class AdminOrderMenu implements Menu {
             choice = Integer.parseInt(reader.readLine());
         } catch (NumberFormatException | IOException e) {
             System.out.println(TRY_AGAIN);
-            addSubMenu();
+            addNewSubMenu();
         }
         switch (choice) {
             case 1:
@@ -426,13 +444,13 @@ public class AdminOrderMenu implements Menu {
     private void showAllSubMenu() {
         orderList = orderServise.findAll();
         showAllList(orderList);
-        System.out.println(RETURN);
+        System.out.println(RETURN_TO_PREVIOUS);
         try {
             int x = Integer.parseInt(reader.readLine());
             if (x == 0) {
                 show();
             }
-        } catch (NumberFormatException | NullPointerException | IOException e) {
+        } catch (NullPointerException | IOException e) {
             System.out.println(TRY_AGAIN);
             showAllSubMenu();
         }
@@ -441,5 +459,68 @@ public class AdminOrderMenu implements Menu {
     private void printSuccessAndReturn() {
         System.out.println("Success");
         updateSubMenu();
+    }
+
+    private void printSuccessAndReturnManageOrder() {
+        System.out.println("Success");
+        manageOrderStatusSubMenu();
+    }
+
+    private void changeOrderStatus() {
+        showAllNewOrders();
+        System.out.println(RETURN_TO_PREVIOUS);
+        System.out.println("Write the column number");
+        Order order = null;
+        int choice = 0;
+        try {
+            choice = Integer.parseInt(reader.readLine());
+            if(choice != 0) {
+                order = orderList.get(choice - 1);
+            }
+            System.out.println("Select a new order status");
+            showAllOrderStatus();
+            System.out.println(RETURN);
+            int i = Integer.parseInt(reader.readLine());
+            switch (i) {
+                case 1:
+                    order.setOrderStatus(OrderStatus.PRE_CHECKOUT);
+                    printSuccessAndReturnManageOrder();
+                    break;
+                case 2:
+                    order.setOrderStatus(OrderStatus.CHECKED_OUT);
+                    printSuccessAndReturnManageOrder();
+                    break;
+                case 3:
+                    order.setOrderStatus(OrderStatus.SENT);
+                    printSuccessAndReturnManageOrder();
+                    break;
+                case 4:
+                    order.setOrderStatus(OrderStatus.DONE);
+                    printSuccessAndReturnManageOrder();
+                    break;
+                case 5:
+                    order.setOrderStatus(OrderStatus.REJECTED);
+                    printSuccessAndReturnManageOrder();
+                    break;
+                case 0:
+                    manageOrderStatusSubMenu();
+                    break;
+            }
+        } catch (IOException | NullPointerException e) {
+            System.out.println(TRY_AGAIN);
+            changeOrderStatus();
+        }
+    }
+
+    private void showAllNewOrders() {
+        orderList = orderServise.findAll();
+        int i = 1;
+        for (Order order : orderList) {
+            if (order.getOrderStatus().equals(OrderStatus.PRE_CHECKOUT)) {
+                System.out.println(i + ": " + order);
+
+            }
+            i++;
+        }
     }
 }

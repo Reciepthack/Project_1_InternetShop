@@ -1,5 +1,6 @@
-package view.impl;
+package view.admin;
 
+import view.LoginMenu;
 import view.Menu;
 
 import java.io.BufferedReader;
@@ -8,13 +9,11 @@ import java.io.InputStreamReader;
 
 public class AdminMainMenu implements Menu {
     private static final AdminMainMenu adminMainMenu = new AdminMainMenu();
-    private static final AdminOrderMenu adminOrderMenu = AdminOrderMenu.getInstance();
-  //  private static final AdminProductsMenu adminProductsMenu = AdminProductsMenu.getInstance();
+    //  private static final AdminProductsMenu adminProductsMenu = AdminProductsMenu.getInstance();
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static final String TRY_AGAIN = "Incorrect input. Please, try again";
-    private final String [] adminMainMenuList = {"1. Admin products menu", "2. Admin user menu",
-                                                "3. Admin order menu", "0. Exit"};
-    private LoginMenu loginMenu = new LoginMenu();
+    private final String[] adminMainMenuList = {"1. Admin products menu", "2. Admin user menu",
+            "3. Admin order menu", "0. Exit"};
 
     public static AdminMainMenu getInstance() {
         return adminMainMenu;
@@ -33,13 +32,13 @@ public class AdminMainMenu implements Menu {
             }
             switch (choice) {
                 case 1:
-                  //  adminProductsMenu.show();
+                    AdminProductsMenu.getInstance().show();
                     break;
                 case 2:
-                    //link to users menu
+                    AdminUserMenu.getInstance().show();
                     break;
                 case 3:
-                    adminOrderMenu.show();
+                    AdminOrderMenu.getInstance().show();
                     break;
                 case 0:
                     exit();
@@ -50,10 +49,6 @@ public class AdminMainMenu implements Menu {
 
     @Override
     public void exit() {
-        loginMenu.show();
-    }
-
-    public static void main(String[] args) {
-        new AdminMainMenu().show();
+        LoginMenu.getInstance().show();
     }
 }
