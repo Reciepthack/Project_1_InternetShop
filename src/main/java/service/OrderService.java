@@ -21,4 +21,5 @@ public interface OrderService {
     List<Order> findAll();
 
     double positionCalculate(Product product, int amount);
+
 }
