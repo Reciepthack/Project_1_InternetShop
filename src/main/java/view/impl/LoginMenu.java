@@ -1,14 +1,17 @@
 package view.impl;
 
-
+import model.User;
+import model.UserRole;
 import service.UserService;
+import service.UserServiceImpl;
 import view.Menu;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class LoginMenu implements Menu {
 
-    private UserService userService;
+    private UserService userService = UserServiceImpl.getInstance();
     private String[] items = {"1.Login", "2.Register"};
     private Scanner scanner;
 
@@ -29,7 +32,7 @@ public class LoginMenu implements Menu {
               case 1 :
                   loginSubMenu(scanner); break;
               case 2 :
-                  loginSubMenu(scanner); break;
+                  registerSubMenu(scanner); break;
               case 0 : exit(); break;
           }
         }
@@ -42,23 +45,41 @@ public class LoginMenu implements Menu {
 
     private void loginSubMenu(Scanner scanner)
     {
-        System.out.println("input login:");
-        String login =  scanner.nextLine();
+        System.out.println("input login: ");
+        String login =  scanner.next();
 
-        System.out.println("input password:");
-        String password =  scanner.nextLine();
+        System.out.println("input password: ");
+        String password =  scanner.next();
 
         if(userService.login(login, password)) {
-
-        }
+            User user = userService.findByName(login);
+                if (UserRole.ADMIN.equals(user.getRole())) {
+                    AdminMainMenu.getInstance().show();
+                } else if (user.getRole().equals(UserRole.CUSTOMER)){
+                UserMainMenu userMainMenu = new UserMainMenu();
+                userMainMenu.show();
+                }
+            userService.setActiveUser(user);
+    }
         else {
-            System.out.println("Wrong username/pasword");
+            System.out.println("Wrong username/password");
             show();
         }
     }
 
     private void registerSubMenu(Scanner scanner)
     {
-        show(); //todo add impl
+        System.out.println("Create a username: ");
+        String username = scanner.next();
+
+
+        System.out.println("Create a password: ");
+        String password = scanner.next();
+
+        System.out.println("Check your new Login and Password");
+        System.out.println("Login "+username);
+        System.out.println("Password "+password);
+
+        userService.register(username, password);
     }
 }
