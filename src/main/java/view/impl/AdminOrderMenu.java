@@ -32,7 +32,6 @@ public class AdminOrderMenu implements Menu {
     private List<Order> orderList = null;
     private User user;
     private int currentCount;
-
     public static AdminOrderMenu getInstance() {
         return adminOrderMenu;
     }
