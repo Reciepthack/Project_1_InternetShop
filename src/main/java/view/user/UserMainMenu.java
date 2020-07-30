@@ -2,13 +2,12 @@ package view.user;
 
 
 import view.Menu;
-import view.impl.LoginMenu;
+import view.LoginMenu;
 
 import java.util.Scanner;
 
 public class UserMainMenu implements Menu {
     private final Scanner scanner = new Scanner(System.in);
-    private final LoginMenu loginMenu = new LoginMenu();
     private static final UserMainMenu userMainMenu = new UserMainMenu();
     private static final UserOrderMenu userOrderMenu = UserOrderMenu.getInstance();
     private static final UserProductMenu userProductMenu = UserProductMenu.getInstance();
@@ -39,10 +38,6 @@ public class UserMainMenu implements Menu {
 
     @Override
     public void exit() {
-        loginMenu.show();
-    }
-
-    public static void main(String[] args) {
-        new UserMainMenu().show();
+        LoginMenu.getInstance().show();
     }
 }

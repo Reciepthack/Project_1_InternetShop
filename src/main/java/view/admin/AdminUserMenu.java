@@ -1,8 +1,9 @@
-package view.impl;
+package view.admin;
 
 import model.User;
 import service.UserService;
 import service.UserServiceImpl;
+import view.LoginMenu;
 import view.Menu;
 
 import java.util.InputMismatchException;
@@ -10,12 +11,20 @@ import java.util.Scanner;
 
 public class AdminUserMenu implements Menu {
 
+    private static AdminUserMenu adminUserMenu = new AdminUserMenu();
+
     private String[] items = {"1.Unblock/Block user"};
     private Scanner scanner = new Scanner(System.in);
     private AdminMainMenu adminMainMenu = AdminMainMenu.getInstance();
 
     private UserService userService = UserServiceImpl.getInstance();
 
+    private AdminUserMenu(){
+    }
+
+    public static AdminUserMenu getInstance(){
+        return adminUserMenu;
+    }
 
     @Override
     public void show() {

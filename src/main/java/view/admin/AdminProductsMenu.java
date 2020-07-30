@@ -1,4 +1,4 @@
-package view.impl;
+package view.admin;
 
 import model.Product;
 import service.*;
