@@ -6,7 +6,6 @@ import service.UserService;
 import service.UserServiceImpl;
 import view.Menu;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class LoginMenu implements Menu {
