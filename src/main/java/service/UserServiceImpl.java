@@ -3,6 +3,7 @@ package service;
 import dao.UserDao;
 import dao.UserDaoIml;
 import model.User;
+import model.UserRole;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class UserServiceImpl implements UserService{
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
+            user.setRole(UserRole.CUSTOMER);
+            user.setActive(true);
             userDao.save(user);
             return true;
         }
@@ -57,14 +60,14 @@ public class UserServiceImpl implements UserService{
     public void blockUser(long id) {
         User user = userDao.findById(id);
         user.setActive(false);
-        userDao.save(user);
+        userDao.update(user);
     }
 
     @Override
     public void unBlockUser(long id) {
         User user = userDao.findById(id);
         user.setActive(true);
-        userDao.save(user);
+        userDao.update(user);
     }
 
     @Override
@@ -86,4 +89,10 @@ public class UserServiceImpl implements UserService{
     public User getActiveUser() {
         return activeUser;
     }
+
+    @Override
+    public void setActiveUser(User user) {
+        this.activeUser = user;
+    }
+
 }
