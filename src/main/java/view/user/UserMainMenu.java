@@ -1,8 +1,7 @@
 package view.user;
 
-
-import view.Menu;
 import view.LoginMenu;
+import view.Menu;
 
 import java.util.Scanner;
 
@@ -21,16 +20,16 @@ public class UserMainMenu implements Menu {
     public void show() {
         showItems(userMainMenuList);
         while (true) {
-            switch (scanner.nextInt()) {
-                case 1:
+            switch (scanner.next()) {
+                case "1":
                     userProductMenu.show();
                     break;
-                case 2:
+                case "2":
                     userOrderMenu.show();
                     break;
                 default:
                     incorrectInput();
-                case 0:
+                case "0":
                     exit();
             }
         }
