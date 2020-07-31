@@ -23,7 +23,6 @@ public class UserProductMenu implements Menu {
             "3.addProduct", "4.checkout Order", "0. PreviousMenu"};
     private List<Product> productList = null;
 
-
     public static UserProductMenu getInstance() {
         return userProductMenu;
     }
@@ -31,19 +30,19 @@ public class UserProductMenu implements Menu {
     @Override
     public void show() {
         showItems(items);
-        switch (scanner.nextInt()) {
-            case 1:
+        switch (scanner.next()) {
+            case "1":
                 showAllProduct();
                 break;
-            case 2:
+            case "2":
                 searchingProduct();
                 break;
-            case 3:
+            case "3":
                 makeOrder();
                 break;
-            case 4:
+            case "4":
                 checkoutOrder();
-            case 0:
+            case "0":
                 exit();
                 break;
             default:
@@ -52,17 +51,28 @@ public class UserProductMenu implements Menu {
     }
 
     private void checkoutOrder() {
+        System.out.println("Enter id of order you want to check");
         int orderId = scanner.nextInt();
         Order order;
-        System.out.println("Enter id of order you want to check");
         order = orderService.findById(orderId);
         System.out.println("You order is: " + order.getOrderStatus());
+        show();
     }
 
     public void showAllProduct() {
-        int products = 5;
-        productService.findAll().stream().limit(products).
-                forEach(product -> System.out.println("Product: " + product));
+        int pageSize = 5;
+        try {
+            while (true) {
+                System.out.println("Enter 0 to exit, enter page number to continue: ");
+                int page = scanner.nextInt();
+                if (page < 1) break;
+                productService.findAll().stream().skip((page - 1) * pageSize)
+                        .limit(pageSize)
+                        .forEach(product -> System.out.println(product));
+            }
+        } catch (InputMismatchException exception) {
+            System.out.println("Wrong format, please enter id again");
+        }
         show();
     }
 
