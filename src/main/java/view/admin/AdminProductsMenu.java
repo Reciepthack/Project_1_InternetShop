@@ -16,8 +16,8 @@ public class AdminProductsMenu implements Menu {
     private static final String Return = "0 Return to main menu";
     private static final String Incorrect = "Please try again";
     private static final String[] SUB_PRODUCT_MENU = {"1. Show product by Id", "2. Show product by Name", Return};
-    private static final String[] PRODUCT_CHANGE_MENU = {"1. Product Id", "2. Product Name",
-            "3. Product description", "4. Product price", "5. Product amount", Return};
+    private static final String[] PRODUCT_CHANGE_MENU = {"1. Product Name",
+            "2. Product description", "3. Product price", "4. Product amount", Return};
     private ProductService productService = ProductServiceImpl.getInstance();
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private List<Product> productList = null;
@@ -155,26 +155,21 @@ public class AdminProductsMenu implements Menu {
             choice = Integer.parseInt(reader.readLine());
             switch (choice) {
                 case 1:
-                    System.out.println("Enter new Id");
-                    product.setId(Long.parseLong(reader.readLine()));
-                    printSuccess();
-                    break;
-                case 2:
                     System.out.println("Enter new Name");
                     product.setName(reader.readLine());
                     printSuccess();
                     break;
-                case 3:
+                case 2:
                     System.out.println("Enter new Description");
                     product.setDescription(reader.readLine());
                     printSuccess();
                     break;
-                case 4:
+                case 3:
                     System.out.println("Enter new Price");
                     product.setPrice(Float.parseFloat(reader.readLine()));
                     printSuccess();
                     break;
-                case 5:
+                case 4:
                     System.out.println("Enter new Amount");
                     product.setAmount(Integer.parseInt(reader.readLine()));
                     printSuccess();
