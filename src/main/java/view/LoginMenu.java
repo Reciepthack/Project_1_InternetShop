@@ -90,7 +90,6 @@ public class LoginMenu implements Menu {
         System.out.println("Password "+password);
 
         userService.register(username, password);
-
         show();
     }
 }
